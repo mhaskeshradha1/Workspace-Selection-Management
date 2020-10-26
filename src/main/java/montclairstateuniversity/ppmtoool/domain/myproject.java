@@ -2,6 +2,7 @@ package montclairstateuniversity.ppmtoool.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ public class myproject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     //@NotNull
     @NotBlank
     private String myprojectnm;
@@ -35,12 +36,17 @@ public class myproject {
     private Date created_at;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_at;
+
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "myproject")
+    @JsonIgnore
+    private Backlog backlog;
 //constructor
     public myproject(){
 
     }
 //getter and setter for each argument do right click-generate-getter and setter
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -88,6 +94,14 @@ public class myproject {
         this.enddate = enddate;
     }
 
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
     public Date getCreated_at() {
         return created_at;
     }
@@ -103,6 +117,7 @@ public class myproject {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
+
 
     @PrePersist
     protected void onCreate(){

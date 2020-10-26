@@ -1,7 +1,9 @@
 package montclairstateuniversity.ppmtoool.Services;
 
+import montclairstateuniversity.ppmtoool.domain.Backlog;
 import montclairstateuniversity.ppmtoool.domain.myproject;
 import montclairstateuniversity.ppmtoool.exceptions.ProjectIdException;
+import montclairstateuniversity.ppmtoool.repositories.BacklogRepository;
 import montclairstateuniversity.ppmtoool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,22 @@ public class ProjectService {
     @Autowired
     private ProjectRepository ProjectRepository;               //injected projectRepository in service class
 
+
+    @Autowired
+    private BacklogRepository backlogRepository;
+
     public myproject saveOrUpdateProject(myproject myproject){
         try {
             myproject.setMyprojectidentifier(myproject.getMyprojectidentifier().toUpperCase());
+            if(myproject.getId() == null) {
+                Backlog backlog = new Backlog();
+                myproject.setBacklog(backlog);
+                backlog.setMyproject(myproject);
+                backlog.setMyprojectidentifier(myproject.getMyprojectidentifier().toUpperCase());
+            }
+            if(myproject.getId()!=null){
+                myproject.setBacklog(backlogRepository.findByMyprojectidentifier(myproject.getMyprojectidentifier().toUpperCase()));
+            }
             return ProjectRepository.save(myproject);
         }catch (Exception e){
             throw new ProjectIdException("Project Id '" +myproject.getMyprojectidentifier().toUpperCase()+"'Already exists");
