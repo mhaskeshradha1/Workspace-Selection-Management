@@ -11,6 +11,8 @@ import montclairstateuniversity.ppmtoool.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectTaskService {
 
@@ -87,11 +89,16 @@ public class ProjectTaskService {
 
 
     public Task updateByProjectSequence(Task updatedTask, String backlog_id, String pt_id){
-        Task task = taskRepository.findByProjectSequence(pt_id);
+        Task task = findPTByProjectSequence(backlog_id,pt_id);
+
         task= updatedTask;
         return taskRepository.save(task);
     }
+    public void deletePTByProjectSequence(String backlog_id, String pt_id){
+        Task task = findPTByProjectSequence(backlog_id,pt_id);
 
+          taskRepository.delete(task);
+    }
 
 }
     

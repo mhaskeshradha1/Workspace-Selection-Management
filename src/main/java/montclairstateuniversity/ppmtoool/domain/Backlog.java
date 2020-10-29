@@ -24,7 +24,7 @@ public class Backlog {
 
 
 //one to many relationship with Task
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "backlog")
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER,mappedBy = "backlog",orphanRemoval = true)
     private List<Task> Tasks = new ArrayList<>();
 
     public String getMyprojectidentifier() {
