@@ -3,7 +3,7 @@ package montclairstateuniversity.ppmtoool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
+//import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
