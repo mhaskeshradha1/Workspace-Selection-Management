@@ -18,16 +18,21 @@ public class ProjectTaskService {
 
     @Autowired
     private BacklogRepository backlogRepository;
+
     @Autowired
     private TaskRepository taskRepository;
+
     @Autowired
     private ProjectRepository projectRepository;
 
-    public Task addProjectTask(String myprojectIdentifier, Task task) {
+    @Autowired
+    private ProjectService projectService;
 
-        try {
+    public Task addProjectTask(String myprojectIdentifier, Task task, String username) {
+
+
             //child tasks added to the parent task ...considering parent (backlog)is exists.
-            Backlog backlog = backlogRepository.findByMyprojectidentifier(myprojectIdentifier);
+            Backlog backlog = projectService.findmyprojectByidentifier(myprojectIdentifier, username).getBacklog();//backlogRepository.findByMyprojectidentifier(myprojectIdentifier);
             //set the backlog (parent task) to child task.
             task.setBacklog(backlog);
             //project sequence starts from 0 and continue to increase as tasks added to the dashboard.
@@ -47,21 +52,18 @@ public class ProjectTaskService {
             if (task.getStatus() == "" || task.getStatus() == null) {
                 task.setStatus("TO_DO");
             }
-            if (task.getPriority() == 0 || task.getPriority() == null) {
+            //first check the null with priority
+            if (task.getPriority() == null || task.getPriority() == 0) {
                 task.setPriority(3);
             }
             return taskRepository.save(task);
-        }catch (Exception e){
-            throw new ProjectNotFound("ProjectNot Found");
-        }
+
 
     }
 
-    public  Iterable<Task>findBacklogById(String id){
-        myproject myproject = projectRepository.findByMyprojectidentifier(id);
-        if(myproject==null){
-            throw new ProjectNotFound("Projectid:'"+id+"'does not exists");
-        }
+    public  Iterable<Task>findBacklogById(String id, String username){
+        projectService.findmyprojectByidentifier(id, username);
+
         return taskRepository.findByMyprojectidentifierOrderByPriority(id);
     }
 
