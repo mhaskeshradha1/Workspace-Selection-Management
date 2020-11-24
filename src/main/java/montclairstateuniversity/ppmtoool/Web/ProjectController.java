@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class ProjectController {
     private ValidationErrorService ValidationErrorService;   //inject ValidationErrorService class
 
    @PostMapping("")
-    public ResponseEntity<?> createNewProject(@Valid @RequestBody myproject myproject, BindingResult result){
+    public ResponseEntity<?> createNewProject(@Valid @RequestBody myproject myproject, BindingResult result, Principal principal){
 
        ResponseEntity<?> errorMap = ValidationErrorService.ValidationErrorService(result);
        if(errorMap!=null) return errorMap;
@@ -41,7 +42,8 @@ public class ProjectController {
            }
            return new ResponseEntity<Map<String,String>>(errrorMap,HttpStatus.BAD_REQUEST);
        }*/
-       myproject myproject1 = ProjectService.saveOrUpdateProject(myproject);
+       //added principal login user
+       myproject myproject1 = ProjectService.saveOrUpdateProject(myproject,principal.getName());
            return new ResponseEntity<myproject>(myproject, HttpStatus.CREATED);
     }
     @GetMapping("/{ProjectId}")

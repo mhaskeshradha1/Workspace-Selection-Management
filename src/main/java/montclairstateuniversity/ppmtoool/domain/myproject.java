@@ -41,6 +41,19 @@ public class myproject {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "myproject")
     @JsonIgnore
     private Backlog backlog;
+
+
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
+// projectLeader is the one who cretes the project. save this ProjectLeader for later use.
+    private String projectLeader;
+
+
+
 //constructor
     public myproject(){
 
@@ -117,7 +130,21 @@ public class myproject {
     public void setUpdated_at(Date updated_at) {
         this.updated_at = updated_at;
     }
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getProjectLeader() {
+        return projectLeader;
+    }
+
+    public void setProjectLeader(String projectLeader) {
+        this.projectLeader = projectLeader;
+    }
 
     @PrePersist
     protected void onCreate(){

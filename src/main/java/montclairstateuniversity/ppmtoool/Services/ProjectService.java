@@ -1,10 +1,12 @@
 package montclairstateuniversity.ppmtoool.Services;
 
 import montclairstateuniversity.ppmtoool.domain.Backlog;
+import montclairstateuniversity.ppmtoool.domain.User;
 import montclairstateuniversity.ppmtoool.domain.myproject;
 import montclairstateuniversity.ppmtoool.exceptions.ProjectIdException;
 import montclairstateuniversity.ppmtoool.repositories.BacklogRepository;
 import montclairstateuniversity.ppmtoool.repositories.ProjectRepository;
+import montclairstateuniversity.ppmtoool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +22,16 @@ public class ProjectService {
     @Autowired
     private BacklogRepository backlogRepository;
 
-    public myproject saveOrUpdateProject(myproject myproject){
+    @Autowired
+    private UserRepository userRepository;
+
+    public myproject saveOrUpdateProject(myproject myproject, String username){
         try {
+            User user = userRepository.findByUsername(username);
+            //set one to many relationship
+            myproject.setUser(user);
+            //set projectleader
+            myproject.setProjectLeader(user.getUsername());
             myproject.setMyprojectidentifier(myproject.getMyprojectidentifier().toUpperCase());
             if(myproject.getId() == null) {
                 Backlog backlog = new Backlog();
