@@ -4,6 +4,7 @@ import montclairstateuniversity.ppmtoool.domain.Backlog;
 import montclairstateuniversity.ppmtoool.domain.User;
 import montclairstateuniversity.ppmtoool.domain.myproject;
 import montclairstateuniversity.ppmtoool.exceptions.ProjectIdException;
+import montclairstateuniversity.ppmtoool.exceptions.ProjectNotFound;
 import montclairstateuniversity.ppmtoool.repositories.BacklogRepository;
 import montclairstateuniversity.ppmtoool.repositories.ProjectRepository;
 import montclairstateuniversity.ppmtoool.repositories.UserRepository;
@@ -48,23 +49,29 @@ public class ProjectService {
         }
 
     }
-    public myproject findmyprojectByidentifier(String ProjectId){
+    public myproject findmyprojectByidentifier(String ProjectId,String username){
         myproject myproject = ProjectRepository.findByMyprojectidentifier(ProjectId.toUpperCase());
         if (myproject == null){
             throw new ProjectIdException("Project Id '" +ProjectId+"'does not exists");
         }
+
+        if(!myproject.getProjectLeader().equals(username)){
+            throw new ProjectNotFound("Project not found in your account");
+        }
+
+
         return myproject;
     }
 
-    public Iterable<myproject> findAllProjects(){
-        return ProjectRepository.findAll();
+    public Iterable<myproject> findAllProjects(String username){
+        return ProjectRepository.findAllByProjectLeader(username);
     }
-    public void deleteProjectByIdentifier(String ProjectId){
-        myproject myproject = ProjectRepository.findByMyprojectidentifier(ProjectId.toUpperCase());
-        if(myproject == null){
-            throw new ProjectIdException("can not project with this ID'"+ProjectId+" '.is not exist");
 
-        } ProjectRepository.delete(myproject);
+
+
+    public void deleteProjectByIdentifier(String ProjectId, String username){
+        ProjectRepository.delete(findmyprojectByidentifier(ProjectId, username));
+
     }
 
 
