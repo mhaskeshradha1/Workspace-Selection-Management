@@ -27,6 +27,20 @@ public class ProjectService {
     private UserRepository userRepository;
 
     public myproject saveOrUpdateProject(myproject myproject, String username){
+                  //right user will update the task
+        if(myproject.getId() != null){
+            myproject existingProject = ProjectRepository.findByMyprojectidentifier(myproject.getMyprojectidentifier());
+            if(existingProject !=null &&(!existingProject.getProjectLeader().equals(username))){
+                throw new ProjectNotFound("Project not found in your account");
+            }else if(existingProject == null){
+                throw new ProjectNotFound("Project with ID: '"+myproject.getMyprojectidentifier()+"' cannot be updated because it doesn't exist");
+            }
+        }
+
+
+
+
+
         try {
             User user = userRepository.findByUsername(username);
             //set one to many relationship
