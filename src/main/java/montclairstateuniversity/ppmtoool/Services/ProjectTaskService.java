@@ -33,6 +33,7 @@ public class ProjectTaskService {
 
             //child tasks added to the parent task ...considering parent (backlog)is exists.
             Backlog backlog = projectService.findmyprojectByidentifier(myprojectIdentifier, username).getBacklog();//backlogRepository.findByMyprojectidentifier(myprojectIdentifier);
+        System.out.println(backlog);
             //set the backlog (parent task) to child task.
             task.setBacklog(backlog);
             //project sequence starts from 0 and continue to increase as tasks added to the dashboard.
@@ -67,12 +68,9 @@ public class ProjectTaskService {
         return taskRepository.findByMyprojectidentifierOrderByPriority(id);
     }
 
-    public Task findPTByProjectSequence(String backlog_id,String pt_id){
+    public Task findPTByProjectSequence(String backlog_id,String pt_id,String username){
 //make sure that will search on existing backlog
-        Backlog backlog = backlogRepository.findByMyprojectidentifier(backlog_id);
-        if(backlog==null){
-            throw new ProjectNotFound("Project with ID:'"+backlog_id+"'does not exists");
-        }
+        projectService.findmyprojectByidentifier(backlog_id, username);
         //make sure that the task exists..
         Task task = taskRepository.findByProjectSequence(pt_id);
         if(task == null){
@@ -90,14 +88,14 @@ public class ProjectTaskService {
 
 
 
-    public Task updateByProjectSequence(Task updatedTask, String backlog_id, String pt_id){
-        Task task = findPTByProjectSequence(backlog_id,pt_id);
+    public Task updateByProjectSequence(Task updatedTask, String backlog_id, String pt_id,String username){
+        Task task = findPTByProjectSequence(backlog_id,pt_id, username);
 
         task= updatedTask;
         return taskRepository.save(task);
     }
-    public void deletePTByProjectSequence(String backlog_id, String pt_id){
-        Task task = findPTByProjectSequence(backlog_id,pt_id);
+    public void deletePTByProjectSequence(String backlog_id, String pt_id,String username){
+        Task task = findPTByProjectSequence(backlog_id,pt_id,username);
 
           taskRepository.delete(task);
     }
