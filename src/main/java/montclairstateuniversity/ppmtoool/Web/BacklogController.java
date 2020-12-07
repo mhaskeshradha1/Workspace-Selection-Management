@@ -1,6 +1,8 @@
 package montclairstateuniversity.ppmtoool.Web;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import montclairstateuniversity.ppmtoool.Services.ProjectTaskService;
 import montclairstateuniversity.ppmtoool.Services.ValidationErrorService;
 import montclairstateuniversity.ppmtoool.domain.Task;
@@ -27,6 +29,7 @@ public class BacklogController {
 
 
     @PostMapping("/{backlog_id}")
+    @Operation(summary = "Add project Task", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> addPTtoBacklog(@Valid @RequestBody Task task,
                                             BindingResult result, @PathVariable String backlog_id, Principal principal) {
 
@@ -38,12 +41,14 @@ public class BacklogController {
 
 
     @GetMapping("/{backlog_id}")
+    @Operation(summary = "Get project Task", security = @SecurityRequirement(name = "bearerAuth"))
     public Iterable<Task> getProjectBacklog(@PathVariable String backlog_id, Principal principal){
         return projectTaskService.findBacklogById(backlog_id,principal.getName());
     }
 
 
     @GetMapping("/{backlog_id}/{pt_id}")
+    @Operation(summary = "Get tasks", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> getTask(@PathVariable String backlog_id,@PathVariable String pt_id, Principal principal){
         Task task = projectTaskService.findPTByProjectSequence(backlog_id,pt_id, principal.getName());
         return new ResponseEntity<Task> (task, HttpStatus.OK);
@@ -51,6 +56,7 @@ public class BacklogController {
     }
 
     @PatchMapping("/{backlog_id}/{pt_id}")
+    @Operation(summary = "Update task", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> updateProjectTask(@Valid @RequestBody Task task, BindingResult result,
                                                @PathVariable String backlog_id,@PathVariable String pt_id,Principal principal){
         ResponseEntity<?> errorMap = mapValidationErrorService.ValidationErrorService(result);
@@ -60,6 +66,8 @@ public class BacklogController {
        return new ResponseEntity<Task>(updatedtask,HttpStatus.OK);
     }
     @DeleteMapping("/{backlog_id}/{pt_id}")
+
+    @Operation(summary = "Delete Project Task", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?>deleteProjectTask(@PathVariable String backlog_id,@PathVariable String pt_id,Principal principal){
 
         projectTaskService.deletePTByProjectSequence(backlog_id, pt_id,principal.getName());

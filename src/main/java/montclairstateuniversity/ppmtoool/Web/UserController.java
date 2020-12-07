@@ -1,6 +1,8 @@
 package montclairstateuniversity.ppmtoool.Web;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import montclairstateuniversity.ppmtoool.Services.UserService;
 import montclairstateuniversity.ppmtoool.Services.ValidationErrorService;
 import montclairstateuniversity.ppmtoool.domain.User;
@@ -45,6 +47,7 @@ public class UserController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
+    @Operation(summary = "Login", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result){
         ResponseEntity<?> errorMap = ValidationErrorService.ValidationErrorService(result);
         if(errorMap != null) return errorMap;
@@ -64,6 +67,7 @@ public class UserController {
 
 
     @PostMapping("/register")
+    @Operation(summary = "User Registration", security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
         // Validate passwords match
         uservalidator.validate(user,result);

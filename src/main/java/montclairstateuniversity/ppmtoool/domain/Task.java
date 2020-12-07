@@ -1,5 +1,6 @@
 package montclairstateuniversity.ppmtoool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Task {
     private String acceptanceCriteria;
     private String status;
     private Integer priority;
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date dueDate;
     //  many to one relatioship with backlog
     @ManyToOne(fetch = FetchType.EAGER)
@@ -28,7 +30,9 @@ public class Task {
 
     @Column(updatable = false)
     private String myprojectidentifier;
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date create_At;
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date update_At;
 
     public Task() {
